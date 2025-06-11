@@ -20,17 +20,26 @@ async function ensureTableExists() {
 // GET - 获取所有菜品
 export async function GET() {
   try {
+    // 检查环境变量
+    if (!process.env.DATABASE_URL) {
+      console.error('DATABASE_URL environment variable is not set');
+      return NextResponse.json(
+        { success: false, error: 'Database configuration error' },
+        { status: 500 }
+      );
+    }
+
     await ensureTableExists();
     const dishes = await getAllDishes();
-    return NextResponse.json({ 
-      success: true, 
+    return NextResponse.json({
+      success: true,
       data: dishes.map(dish => dish.name) // 返回菜品名称数组，保持与原有格式兼容
     });
   } catch (error: unknown) {
     console.error('Error in GET /api/dishes:', error);
     const errorMessage = error instanceof Error ? error.message : '获取菜品失败';
     return NextResponse.json(
-      { success: false, error: errorMessage },
+      { success: false, error: errorMessage, debug: process.env.NODE_ENV === 'development' ? String(error) : undefined },
       { status: 500 }
     );
   }
