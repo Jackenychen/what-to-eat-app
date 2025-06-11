@@ -14,13 +14,13 @@ export async function GET() {
 
     // 测试数据库连接
     const sql = neon(process.env.DATABASE_URL);
-    const result = await sql`SELECT 1 as test`;
-    
+    await sql`SELECT 1 as test`;
+
     // 检查菜品表是否存在
     const tableCheck = await sql`
       SELECT EXISTS (
-        SELECT FROM information_schema.tables 
-        WHERE table_schema = 'public' 
+        SELECT FROM information_schema.tables
+        WHERE table_schema = 'public'
         AND table_name = 'dishes'
       );
     `;
