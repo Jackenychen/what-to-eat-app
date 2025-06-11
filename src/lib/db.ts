@@ -1,7 +1,11 @@
 import { neon } from '@neondatabase/serverless';
 
-// 初始化数据库连接
-const sql = neon(process.env.DATABASE_URL!);
+// 初始化数据库连接 - 支持多种环境变量名
+const databaseUrl = process.env.NEON_URL || process.env.DATABASE_URL;
+if (!databaseUrl) {
+  throw new Error('Database URL not found. Please set NEON_URL or DATABASE_URL environment variable.');
+}
+const sql = neon(databaseUrl);
 
 // 菜品接口定义
 export interface Dish {

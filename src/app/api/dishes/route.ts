@@ -21,8 +21,9 @@ async function ensureTableExists() {
 export async function GET() {
   try {
     // 检查环境变量
-    if (!process.env.DATABASE_URL) {
-      console.error('DATABASE_URL environment variable is not set');
+    const databaseUrl = process.env.NEON_URL || process.env.DATABASE_URL;
+    if (!databaseUrl) {
+      console.error('Database URL environment variable is not set (NEON_URL or DATABASE_URL)');
       return NextResponse.json(
         { success: false, error: 'Database configuration error' },
         { status: 500 }

@@ -4,16 +4,17 @@ import { neon } from '@neondatabase/serverless';
 export async function GET() {
   try {
     // 检查环境变量
-    if (!process.env.DATABASE_URL) {
+    const databaseUrl = process.env.NEON_URL || process.env.DATABASE_URL;
+    if (!databaseUrl) {
       return NextResponse.json({
         status: 'error',
-        message: 'DATABASE_URL environment variable is not set',
+        message: 'Database URL environment variable is not set (NEON_URL or DATABASE_URL)',
         timestamp: new Date().toISOString()
       }, { status: 500 });
     }
 
     // 测试数据库连接
-    const sql = neon(process.env.DATABASE_URL);
+    const sql = neon(databaseUrl);
     await sql`SELECT 1 as test`;
 
     // 检查菜品表是否存在
