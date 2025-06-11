@@ -102,14 +102,36 @@ export default function Home() {
   };
 
   // 随机选择菜品
-  const randomPick = () => {
+  const randomPick = async () => {
     let currentMenu = menuList;
 
-    // 如果当前菜单为空，自动使用预设菜品
+    // 如果当前菜单为空，自动使用预设菜品并添加到数据库
     if (currentMenu.length === 0) {
-      currentMenu = presetDishes;
-      setMenuList(currentMenu);
-      saveMenuToStorage(currentMenu);
+      try {
+        setLoading(true);
+        const response = await fetch('/api/dishes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ dishes: presetDishes }),
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          currentMenu = result.data;
+          setMenuList(currentMenu);
+        } else {
+          // 如果添加失败，使用预设菜品进行随机选择
+          currentMenu = presetDishes;
+        }
+      } catch (error) {
+        console.error('Error adding preset dishes:', error);
+        // 如果网络错误，使用预设菜品进行随机选择
+        currentMenu = presetDishes;
+      } finally {
+        setLoading(false);
+      }
     }
 
     if (currentMenu.length > 0) {
