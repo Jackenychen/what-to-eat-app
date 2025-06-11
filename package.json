@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "db:init": "node scripts/init-db.js",
-    "import-menu": "node scripts/import-menu.js"
+    "import-menu": "node scripts/import-menu.js",
+    "check-env": "node scripts/check-env.js"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.1",
