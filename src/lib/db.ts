@@ -61,8 +61,8 @@ export async function addDish(name: string): Promise<Dish> {
     }
     
     return result[0] as Dish;
-  } catch (error: any) {
-    if (error.message?.includes('duplicate key')) {
+  } catch (error: unknown) {
+    if (error instanceof Error && error.message?.includes('duplicate key')) {
       throw new Error('该菜品已存在');
     }
     console.error('Error adding dish:', error);
@@ -73,8 +73,8 @@ export async function addDish(name: string): Promise<Dish> {
 // 删除菜品
 export async function deleteDish(id: number): Promise<void> {
   try {
-    const result = await sql`
-      DELETE FROM dishes 
+    await sql`
+      DELETE FROM dishes
       WHERE id = ${id}
     `;
     console.log(`Deleted dish with id: ${id}`);
@@ -87,8 +87,8 @@ export async function deleteDish(id: number): Promise<void> {
 // 根据名称删除菜品
 export async function deleteDishByName(name: string): Promise<void> {
   try {
-    const result = await sql`
-      DELETE FROM dishes 
+    await sql`
+      DELETE FROM dishes
       WHERE name = ${name}
     `;
     console.log(`Deleted dish: ${name}`);
@@ -118,9 +118,9 @@ export async function addMultipleDishes(dishes: string[]): Promise<Dish[]> {
       try {
         const dish = await addDish(dishName);
         addedDishes.push(dish);
-      } catch (error: any) {
+      } catch (error: unknown) {
         // 如果菜品已存在，跳过但不报错
-        if (!error.message?.includes('已存在')) {
+        if (!(error instanceof Error && error.message?.includes('已存在'))) {
           console.error(`Error adding dish ${dishName}:`, error);
         }
       }

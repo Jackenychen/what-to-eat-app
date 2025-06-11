@@ -26,10 +26,11 @@ export async function GET() {
       success: true, 
       data: dishes.map(dish => dish.name) // 返回菜品名称数组，保持与原有格式兼容
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error in GET /api/dishes:', error);
+    const errorMessage = error instanceof Error ? error.message : '获取菜品失败';
     return NextResponse.json(
-      { success: false, error: error.message || '获取菜品失败' },
+      { success: false, error: errorMessage },
       { status: 500 }
     );
   }
@@ -66,10 +67,11 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error in POST /api/dishes:', error);
+    const errorMessage = error instanceof Error ? error.message : '添加菜品失败';
     return NextResponse.json(
-      { success: false, error: error.message || '添加菜品失败' },
+      { success: false, error: errorMessage },
       { status: 500 }
     );
   }
@@ -105,10 +107,11 @@ export async function DELETE(request: NextRequest) {
         { status: 400 }
       );
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error in DELETE /api/dishes:', error);
+    const errorMessage = error instanceof Error ? error.message : '删除菜品失败';
     return NextResponse.json(
-      { success: false, error: error.message || '删除菜品失败' },
+      { success: false, error: errorMessage },
       { status: 500 }
     );
   }
