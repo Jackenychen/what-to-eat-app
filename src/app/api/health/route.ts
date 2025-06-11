@@ -34,7 +34,14 @@ export async function GET() {
       table_exists: tableCheck[0].exists,
       dish_count: dishCount[0].count,
       timestamp: new Date().toISOString(),
-      environment: process.env.NODE_ENV || 'unknown'
+      environment: process.env.NODE_ENV || 'unknown',
+      vercel_env: process.env.VERCEL_ENV || 'unknown',
+      database_url_source: process.env.NEON_URL ? 'NEON_URL' : 'DATABASE_URL',
+      available_env_vars: {
+        DATABASE_URL: !!process.env.DATABASE_URL,
+        NEON_URL: !!process.env.NEON_URL,
+        POSTGRES_URL: !!process.env.POSTGRES_URL
+      }
     });
 
   } catch (error: unknown) {

@@ -1,4 +1,34 @@
 // 检查环境变量的脚本
+const fs = require('fs');
+const path = require('path');
+
+// 手动加载 .env.local 文件
+function loadEnvFile(filename) {
+  const envPath = path.join(__dirname, '..', filename);
+  if (fs.existsSync(envPath)) {
+    console.log(`📁 加载 ${filename}...`);
+    const envContent = fs.readFileSync(envPath, 'utf8');
+    const lines = envContent.split('\n');
+
+    lines.forEach(line => {
+      const trimmedLine = line.trim();
+      if (trimmedLine && !trimmedLine.startsWith('#')) {
+        const [key, ...valueParts] = trimmedLine.split('=');
+        if (key && valueParts.length > 0) {
+          const value = valueParts.join('=');
+          process.env[key.trim()] = value.trim();
+        }
+      }
+    });
+  } else {
+    console.log(`❌ ${filename} 文件不存在`);
+  }
+}
+
+// 加载环境变量文件
+loadEnvFile('.env.local');
+loadEnvFile('.env.development.local');
+
 console.log('🔍 检查环境变量...\n');
 
 // 检查所有可能的数据库 URL 环境变量
