@@ -1,5 +1,0 @@
-{
-  "/api/dishes/route": "app/api/dishes/route.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/page": "app/page.js"
-}
